@@ -12,7 +12,7 @@ export class DomainObject extends NoizuStruct{
     protected _always_strip = {_kind: 0, strip_from_json: 0, raw: 0, _always_strip: 0, auth: 0, client: 0};
     protected _kind = "nyi";
 
-    constructor(protected client: Http, protected auth: FirebaseAuthService, json: any) {
+    constructor(protected client: Http, protected auth: any, json: any) {
       super();
       this.refresh(json);
     }

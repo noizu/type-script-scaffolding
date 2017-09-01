@@ -4,7 +4,7 @@ import { FirebaseAuthService }        from './services/firebase-auth.service';
 import { EntityReference }        from './structs/entity-reference';
 import { NoizuStruct }        from './structs/noizu-struct';
 import { AppengineEntityList }        from './structs/appengine-entity-list';
-
+import { DomainObject } from './domain-object';
 import 'rxjs/add/operator/toPromise';
 
 export class DomainObjectRepo {
@@ -12,7 +12,7 @@ export class DomainObjectRepo {
   protected _kind = null;
   protected _appengine = true;
 
-  constructor(protected client: Http, protected auth: FirebaseAuthService) {
+  constructor(protected client: Http, protected auth: any) {
   }
 
   _getListPromise(url, init, options = {}) {
@@ -128,9 +128,9 @@ export class DomainObjectRepo {
       (resolve, reject) => {
         this.auth.getTokenPromise().then(
           (token) => {
-
+            let json = DomainObject.dataToJson(data, options);
             let requestOptions = this.auth.request_options(token, options);
-            this.client.get(url, requestOptions)
+            this.client.post(url, JSON.stringify(json), requestOptions)
               .toPromise()
               .then((response: any) => {
                 let data = response.json();
@@ -150,4 +150,31 @@ export class DomainObjectRepo {
       });
   }
 
+
+  _putItemPromise(url, data, init,options = {}){
+    return new Promise(
+      (resolve, reject) => {
+        this.auth.getTokenPromise().then(
+          (token) => {
+            let json = DomainObject.dataToJson(data, options);
+            let requestOptions = this.auth.request_options(token, options);
+            this.client.put(url, JSON.stringify(json), requestOptions)
+              .toPromise()
+              .then((response: any) => {
+                let data = response.json();
+                if(data && data["data"]) { data = data["data"]};
+                init(data, resolve);
+               })
+              .catch((error) => {
+                console.error("Request Error", error);
+                reject({message: "request error", details: error});
+              });
+          },(error) => {
+            reject({
+              message: "token error",
+              details: error
+            });
+          });
+      });
+  }
 }
