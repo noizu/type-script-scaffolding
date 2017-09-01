@@ -5,7 +5,6 @@ export class NoizuStruct  {
   constructor() {
   } // end constructor
 
-
   toJson(options: any = {}) {
     let c:any = {};
     let strip_level = 3;

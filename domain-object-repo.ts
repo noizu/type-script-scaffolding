@@ -128,7 +128,7 @@ export class DomainObjectRepo {
       (resolve, reject) => {
         this.auth.getTokenPromise().then(
           (token) => {
-            let json = DomainObject.dataToJson(data, options);
+            let json = data; //DomainObject.dataToJson(data, options);
             let requestOptions = this.auth.request_options(token, options);
             this.client.post(url, JSON.stringify(json), requestOptions)
               .toPromise()
@@ -156,7 +156,7 @@ export class DomainObjectRepo {
       (resolve, reject) => {
         this.auth.getTokenPromise().then(
           (token) => {
-            let json = DomainObject.dataToJson(data, options);
+            let json = data; //DomainObject.dataToJson(data, options);
             let requestOptions = this.auth.request_options(token, options);
             this.client.put(url, JSON.stringify(json), requestOptions)
               .toPromise()

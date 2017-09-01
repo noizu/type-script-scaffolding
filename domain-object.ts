@@ -3,7 +3,7 @@ import { Headers, RequestOptions, Http } from '@angular/http';
 import { FirebaseAuthService }        from './services/firebase-auth.service';
 import { EntityReference }        from './structs/entity-reference';
 import { NoizuStruct }        from './structs/noizu-struct';
-
+ 
 export class DomainObject extends NoizuStruct{
     public  identifier = "nyi";
     public vsn: number;
