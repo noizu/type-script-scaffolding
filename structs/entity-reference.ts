@@ -40,7 +40,7 @@ export class EntityReference extends NoizuStruct  {
           reject(e);
         }
 
-        this.strategy.expand(this).then((r) => {resolve(r)}).error((e) => {reject(e)});
+        this.strategy.expand(this).then((r) => {resolve(r)}, (e) => {reject(e)});
       }
     });
   }
