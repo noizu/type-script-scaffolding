@@ -1,8 +1,8 @@
 import {Headers, RequestOptions, Http} from '@angular/http';
-import {Inject, Injectable} from '@angular/core';
-import { FirebaseAuthService }        from './services/firebase-auth.service';
-import { EntityReference }        from './structs/entity-reference';
-import { NoizuStruct }        from './structs/noizu-struct';
+//import {Inject, Injectable} from '@angular/core';
+//import { FirebaseAuthService }        from './services/firebase-auth.service';
+//import { EntityReference }        from './structs/entity-reference';
+//import { NoizuStruct }        from './structs/noizu-struct';
 import { AppengineEntityList }        from './structs/appengine-entity-list';
 import { DomainObject } from './domain-object';
 import 'rxjs/add/operator/toPromise';
@@ -12,7 +12,8 @@ export class DomainObjectRepo {
   protected _kind = null;
   protected _appengine = true;
 
-  constructor(protected client: Http, protected auth: any) {
+
+  constructor(public strategy: any, protected client: Http, protected auth: any) {
   }
 
   _getListPromise(url, init, options = {}) {

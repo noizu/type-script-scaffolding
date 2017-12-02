@@ -4,12 +4,14 @@ export class EntityReference extends NoizuStruct  {
   protected ref_string: string;
   protected ref_kind: string;
   protected ref_identifier: string | number;
-  protected client: any;
-  protected auth: any;
+  public client: any;
+  public auth: any;
   protected _cache: any;
+  protected strategy: any;
 
-  constructor(client, auth, json) {
+  constructor(strategy, client, auth, json) {
     super();
+    this.strategy = strategy;
     this.ref_string = json;
     this.ref_kind = null;
     this.ref_identifier = null;
@@ -38,13 +40,7 @@ export class EntityReference extends NoizuStruct  {
           reject(e);
         }
 
-        let repo = null;
-        // Determine type.
-        switch (this.kind()) {
-            default:
-              resolve(null);
-            break;
-        }
+        this.strategy.expand(this).then((r) => {resolve(r)}).error((e) => {reject(e)});
       }
     });
   }
@@ -55,62 +51,24 @@ export class EntityReference extends NoizuStruct  {
 
   identifier() {
     if (!this.ref_identifier) {
-      this.ref_identifier = EntityReference.extractIdentifier(this.ref_string);
+      this.ref_identifier = this.strategy.extractIdentifier(this.ref_string);
     }
     return this.ref_identifier;
   }
 
   kind() {
     if (!this.ref_kind) {
-      this.ref_kind = EntityReference.extractKind(this.ref_string);
+      this.ref_kind = this.strategy.extractKind(this.ref_string);
     }
     return this.ref_kind;
-  }
-
-  static extractIdentifier(sref: string) {
-    if (sref) {
-      let r = /ref\.([^\.]*)\.(.*)/g;
-      let m = r.exec(sref);
-      let i = m[2];
-      let ni = parseInt(i);
-      return (isNaN(ni) ? i : ni);
-    } else {
-      return null;
-    }
-  }
-
-  static extractKind(sref: string) {
-    if (sref) {
-      let r = /ref\.([^\.]*)\.(.*)/g;
-      let m = r.exec(sref);
-      switch (m[1]) {
-        case "affirmation":
-        case "inspiration":
-        case "journal-entry":
-        case "user-box":
-          return m[1];
-
-        default:
-          return "unsupported";
-      }
-    } else {
-      return "unsupported";
-    }
-  }
-
-  static IsRefString(sref: string) {
-    return ((typeof sref === 'string') && sref.startsWith("ref."));
   }
 
   toString() {
     return this.ref_string;
   }
 
-  static factory(client, auth, json) {
-    switch (json["kind"]) {
-        default:
-          console.error("Unsupported Entity Kind for EntityReference.factory method", json["kind"]);
-        return json;
-    }
+  static IsRefString(sref: string) {
+      return ((typeof sref === 'string') && sref.startsWith("ref."));
   }
+
 }

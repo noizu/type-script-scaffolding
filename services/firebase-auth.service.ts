@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import {Headers, RequestOptions, Http} from '@angular/http';
 
+
 @Injectable()
 export class FirebaseAuthService {
   protected tokenPromise: Promise<any>;
